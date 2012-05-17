@@ -47,9 +47,16 @@
 #include <sys/stat.h> /* for stat() */
 #include <sys/types.h> /* for off_t */
 #if defined _MSC_VER || defined __BORLANDC__ || defined __MINGW32__
-#if _MSC_VER <= 1600 || defined __BORLANDC__ /* @@@ [2G limit] */
+#if _MSC_VER < 1400 || defined __BORLANDC__ /* @@@ [2G limit] */
 #define fseeko fseek
 #define ftello ftell
+#else
+#if !(defined fseeko)
+#define fseeko _fseeki64
+#endif
+#if !(defined ftello)
+#define ftello _ftelli64
+#endif
 #endif
 #endif
 #include "FLAC/assert.h"

@@ -26,9 +26,16 @@
 #if defined _MSC_VER || defined __MINGW32__
 #include <sys/utime.h> /* for utime() */
 #include <io.h> /* for chmod() */
-#if _MSC_VER <= 1600 /* @@@ [2G limit] */
+#if _MSC_VER < 1400 || defined __BORLANDC__ /* @@@ [2G limit] */
 #define fseeko fseek
 #define ftello ftell
+#else
+#if !(defined fseeko)
+#define fseeko _fseeki64
+#endif
+#if !(defined ftello)
+#define ftello _ftelli64
+#endif
 #endif
 #else
 #include <sys/types.h> /* some flavors of BSD (like OS X) require this to get time_t */
